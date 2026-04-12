@@ -1,0 +1,105 @@
+<section class="orders light-section">
+  <div class="container mx-auto pt-12">
+    <h1 class="font-bold text-2xl mb-6">All Bookings</h1>
+
+    <div id="filterButtons" class="flex flex-wrap gap-2 mb-6">
+      <button data-status="all" class="bg-gray-500 text-white px-4 py-2 rounded">All</button>
+      <button data-status="pending" class="bg-yellow-500 text-white px-4 py-2 rounded">Pending</button>
+      <button data-status="confirmed" class="bg-green-500 text-white px-4 py-2 rounded">Confirmed</button>
+      <button data-status="cancelled" class="bg-red-500 text-white px-4 py-2 rounded">Cancelled</button>
+    </div>
+
+    <p id="totalBookings" class="mb-4 font-medium text-gray-700">
+      Total: <%= bookings.length %>
+    </p>
+
+    <div class="overflow-x-auto">
+      <table class="w-full table-auto bg-white rounded-lg shadow-md">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-4 py-3 text-left">Booking ID</th>
+            <th class="px-4 py-3 text-left">Customer</th>
+            <th class="px-4 py-3 text-left">Phone</th>
+            <th class="px-4 py-3 text-left">Address</th>
+            <th class="px-4 py-3 text-left">Room</th>
+            <th class="px-4 py-3 text-left">Status</th>
+            <th class="px-4 py-3 text-left">Payment</th>
+            <th class="px-4 py-3 text-left">Placed At</th>
+            <th class="px-4 py-3 text-left">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody id="bookingTableBody">
+          <% if (bookings.length) { %>
+            <% bookings.forEach(booking => { %>
+              <tr class="border-b hover:bg-gray-50 transition duration-150">
+                <td class="px-4 py-2 text-sm"><%= booking.id %></td>
+                <td class="px-4 py-2 text-sm"><%= booking.User?.name || "N/A" %></td>
+                <td class="px-4 py-2 text-sm"><%= booking.customerPhone %></td>
+                <td class="px-4 py-2 text-sm"><%= booking.customerAddress %></td>
+                <td class="px-4 py-2 text-sm"><%= booking.roomType?.name || "N/A" %></td>
+
+                <td class="px-4 py-2 text-sm font-semibold">
+                  <form action="/admin/bookings/update-status/<%= booking.id %>" method="POST" class="statusForm">
+                    <select name="status" class="border rounded px-2 py-1 text-sm focus:ring focus:ring-blue-300 transition">
+                      <option value="pending" <%= booking.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                      <option value="confirmed" <%= booking.status === 'confirmed' ? 'selected' : '' %>>Confirmed</option>
+                      <option value="cancelled" <%= booking.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+                    </select>
+                  </form>
+                </td>
+
+                <td class="px-4 py-2 text-sm">
+                  <%= booking.paymentStatus ? 'Paid' : 'Unpaid' %>
+                </td>
+
+                <td class="px-4 py-2 text-sm">
+                  <%= moment(booking.createdAt).format('DD-MM-YYYY hh:mm A') %>
+                </td>
+
+                <td class="px-4 py-2 text-sm">
+                  <form action="/admin/bookings/delete/<%= booking.id %>" method="POST">
+                    <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition">
+                      Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="9" class="text-center py-6 text-gray-500">No Bookings Found</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Auto submit form when status dropdown changes
+    document.querySelectorAll('.statusForm select').forEach(select => {
+      select.addEventListener('change', function() {
+        this.form.submit();
+      });
+    });
+
+    // Filter buttons logic
+    const filterButtons = document.querySelectorAll("#filterButtons button");
+    const tableRows = document.querySelectorAll("#bookingTableBody tr");
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const status = btn.getAttribute("data-status");
+        tableRows.forEach(row => {
+          if (status === "all") {
+            row.style.display = "";
+          } else {
+            const rowStatus = row.querySelector("select").value;
+            row.style.display = rowStatus === status ? "" : "none";
+          }
+        });
+      });
+    });
+  </script>
+</section>

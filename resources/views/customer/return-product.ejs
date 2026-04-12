@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Return Product</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
+        <% if (messages.success) { %>
+            <div class="text-green-500 mb-4"><%= messages.success %></div>
+        <% } %>
+        
+        <% if (messages.error) { %>
+            <div class="text-red-500 mb-4"><%= messages.error %></div>
+        <% } %>
+
+        <h2 class="text-2xl font-semibold mb-4">My All Exlusive Deals</h2>
+        <h4 class="text-sm font-semibold mb-4">No Exclusive Deals Available On This Movement</h4>
+
+        <% if (returns.length === 0) { %>
+            <p class="text-gray-600">No Deals Data Founds</p>
+        <% } else { %>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <% returns.forEach(returnRequest => { %>
+                    <div class="bg-white shadow-md rounded-lg p-4 border-l-4
+                        <%= returnRequest.status === 'Pending' ? 'border-yellow-500' : returnRequest.status === 'Approved' ? 'border-green-500' : 'border-red-500' %>">
+                        <p class="text-gray-600"><strong>ID di ritorno:</strong> <%= returnRequest.id %></p>
+                        <p class="text-gray-600"><strong>ID ordine:</strong> <%= returnRequest.orderId %></p>
+                        <p class="text-gray-600"><strong>Motivo:</strong> <%= returnRequest.description %></p>
+                        <p class="font-bold 
+                            <%= returnRequest.status === 'Pending' ? 'text-yellow-600' : returnRequest.status === 'Approved' ? 'text-green-600' : 'text-red-600' %>">
+                            <strong>Stato:</strong> <%= returnRequest.status %>
+                        </p>
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+
+        <!-- Button to Show Return Form -->
+        <button onclick="" class="w-full bg-blue-500 text-white p-2 rounded mt-6">More Info.</button>
+
+        <!-- Hidden Form (Initially Hidden) -->
+        <div id="returnForm" class="hidden bg-gray-100 p-4 rounded-md mt-4">
+            <h2 class="text-xl font-semibold mb-4">Restituisci un prodotto</h2>
+
+            <form action="/product-return" method="POST">
+                <label class="block text-gray-700">ID utente:</label>
+                <input type="text" name="userId" class="w-full p-2 border border-gray-300 rounded mb-3" required>
+                
+                <label class="block text-gray-700">ID ordine:</label>
+                <input type="text" name="orderId" class="w-full p-2 border border-gray-300 rounded mb-3" required>
+                
+                <label class="block text-gray-700">Motivo del reso:</label>
+                <textarea name="description" class="w-full p-2 border border-gray-300 rounded mb-3" required></textarea>
+                
+                <button type="submit" class="w-full bg-green-500 text-white p-2 rounded">Invia richiesta</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleForm() {
+            document.getElementById("returnForm").classList.toggle("hidden");
+        }
+    </script>
+</body>
+</html>

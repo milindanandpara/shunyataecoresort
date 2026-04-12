@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+
+    
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css">
+    
+			<link href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'>
+            <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
+            <meta charset="utf-8">
+            <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+
+          <!-- Google Fonts -->
+          <link href="https://fonts.googleapis.com/css?family=Montserrat|Ubuntu" rel="stylesheet">
+
+          <!-- CSS Stylesheets -->
+          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+          <link rel="stylesheet" href="css/styles1.css">
+
+      
+          <!-- Font Awesome -->
+          <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
+          <!-- Bootstrap Scripts -->
+          <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+        <link rel="stylesheet" href="/css/app.css">
+
+        <link rel="stylesheet" href="../css/adminhome.css">
+
+   
+   
+
+    <title>Shunyata-eco-resort</title>
+</head>
+<body>
+    <!-- Persistent Notification Panel (Always visible) -->
+<div id="realtime-notifications" class="fixed top-0 left-0 w-full z-50"></div>
+    <nav class="bg-white shadow-lg">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center space-x-7">
+                <a href="/" class="flex items-center py-4 px-4">
+                    <img src="/img/SHUNYATA.jpeg" alt="Logo" class="h-11 w-11">
+                </a>
+            </div>
+
+            <!-- Mobile Cart Counter and Menu Button -->
+            <div class="flex items-center space-x-4 md:hidden">
+                <!-- Cart Counter (Always visible, not inside toggled menu) -->
+                <a href="/pre-confirm-booking" class="inline-block px-4 py-2 rounded-full flex items-center">
+                    <span id="cartCounter" class="text-white font-bold pr-2"><%= session ? session.totalQty : '' %></span>
+                    <img src="/img/room-key.png" alt="cart" class="h-8 w-8">
+                </a>
+                <!-- Hamburger Menu Button -->
+                <button class="outline-none mobile-menu-button">
+                    <svg class="w-6 h-6 text-gray-500 hover:text-green-500"
+                        fill="none"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Desktop Links -->
+            <div class="hidden md:flex items-center ml-auto space-x-6">
+                <% if (user) { %>
+                    <% if (user.role === 'admin') { %>
+                        <a href="/admin/adminpass" class="py-2 px-2 font-medium text-white bg-blue-500 rounded hover:bg-blue-400 transition duration-300">admin control Panel</a>
+                        <a href="/admin/bookings" class="py-2 px-2 font-medium text-gray-500 hover:text-green-500 transition duration-300">Bookings</a>
+                        <a href="/admin/users" class="py-2 px-2 font-medium text-gray-500 hover:text-green-500 transition duration-300">Users</a>
+                        <a href="/admin/rooms" class="py-2 px-2 font-medium text-gray-500 hover:text-green-500 transition duration-300">Resort-rooms</a>
+                        <a href="/admin/cencelorders" class="py-2 px-2 font-medium text-gray-500 hover:text-green-500 transition duration-300"> cencel-bookings</a>
+                        <a href="/admin/returns" class="py-2 px-2 font-medium text-gray-500 hover:text-green-500 transition duration-300">Returns-Exlusive</a>
+                  
+                   
+                        <% } else { %>
+                            <a href="/" class="py-2 px-2 font-medium text-white bg-blue-500 rounded hover:bg-blue-400 transition duration-300">Home</a>
+                  
+                        <a href="/customer/booking" class="py-2 px-2 font-medium text-gray-500 hover:text-green-500 transition duration-300">My-Bookings</a>
+                        <a href="/profile" class="py-2 px-2 font-medium text-gray-500 hover:text-green-500 transition duration-300">Profile</a>
+                        <a href="/execlusive-deal" class="py-2 px-2 font-medium text-gray-500 hover:text-green-500 transition duration-300">Exlusive-Deals</a>
+                        <a href="/customer/cencel-booking" class="py-2 px-2 font-medium text-gray-500 hover:text-green-500 transition duration-300">Cancel-Booking</a>
+                  
+                        <% } %>
+                    <a href="/pre-confirm-booking" class="py-2 px-2 font-medium text-gray-500 hover:text-green-500 transition duration-300 flex items-center">
+                        <span id="cartCounter" class="text-white font-bold pr-2"><%= session ? session.totalQty : '' %></span>
+                        <img src="/img/room-key.png" alt="cart" class="h-10 w-10">
+                    </a>
+                    <form id="logout" action="/logout" method="post" class="inline">
+                        <a onclick="document.getElementById('logout').submit()" class="py-2 px-2 font-medium text-white bg-green-500 rounded hover:bg-green-400 transition duration-300">Log-Out</a>
+                    </form>
+                <% } else { %>
+                    <a href="/pre-confirm-booking" class="py-2 px-2 font-medium text-gray-500 hover:text-green-500 transition duration-300 flex items-center">
+                        <span id="cartCounter" class="text-white font-bold pr-2"><%= session ? session.totalQty : '' %></span>
+                        <img src="/img/room-key.png" alt="cart" class="h-10 w-10">
+                    </a>
+                    <a href="/login" class="py-2 px-2 font-medium text-gray-500 rounded hover:bg-green-500 hover:text-white transition duration-300">Login</a>
+                    <a href="/register" class="py-2 px-2 font-medium text-white bg-green-500 rounded hover:bg-green-400 transition duration-300">Register</a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="hidden mobile-menu bg-black">
+        <ul>
+            <% if (user) { %>
+                <% if (user.role === 'admin') { %>
+                    <li><a href="/admin/adminpass" class="block text-sm px-4 py-2 text-white hover:bg-green-500">admin control Panel</a></li>
+                    <li><a href="/admin/bookings" class="block text-sm px-4 py-2 text-white hover:bg-green-500">Bookings</a></li>
+                    <li><a href="/admin/users" class="block text-sm px-4 py-2 text-white hover:bg-green-500">Users</a></li>
+                    <li><a href="/admin/rooms" class="block text-sm px-4 py-2 text-white hover:bg-green-500">Resort-rooms</a></li>
+                    <li><a href="/admin/cencelorders" class="block text-sm px-4 py-2 text-white hover:bg-green-500">Cencel-Booking</a></li>
+            
+                    <li><a href="/admin/returns" class="block text-sm px-4 py-2 text-white hover:bg-green-500">Return-Exclutive</a></li>
+                <% } else { %>
+                    <li><a href="/" class="block text-sm px-4 py-2 text-white hover:bg-green-500">Home</a></li>
+             
+                    <li><a href="/customer/booking" class="block text-sm px-4 py-2 text-white hover:bg-green-500">My-Bookings</a></li>
+                   
+                    <li><a href="/profile" class="block text-sm px-4 py-2 text-white hover:bg-green-500">Profile</a></li>
+                    <li><a href="/execlusive-deal" class="block text-sm px-4 py-2 text-white hover:bg-green-500"> Exclusive-Deals </a></li>
+                    <li><a href="/customer/cencel-booking" class="block text-sm px-4 py-2 text-white hover:bg-green-500">Cencel-Bookings</a></li>
+             
+                    <% } %>
+                <li>
+                    <form id="logout" action="/logout" method="post">
+                        <a onclick="document.getElementById('logout').submit()" class="block text-sm px-4 py-2 text-white hover:bg-green-500">Log-Out</a>
+                    </form>
+                </li>
+            <% } else { %>
+                <li><a href="/login" class="block text-sm px-4 py-2 text-white hover:bg-green-500">Login</a></li>
+                <li><a href="/register" class="block text-sm px-4 py-2 text-white hover:bg-green-500">Register</a></li>
+            <% } %>
+        </ul>
+    </div>
+
+    <!-- Mobile Menu Toggle Script -->
+    <script>
+        const btn = document.querySelector("button.mobile-menu-button");
+        const menu = document.querySelector(".mobile-menu");
+
+        btn.addEventListener("click", () => {
+            menu.classList.toggle("hidden");
+        });
+    </script>
+</nav>
+            
+   
+<%- body %>
+
+
+  
+  </body>
+  
+  </html>
+
+<script src="/socket.io/socket.io.js" ></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>

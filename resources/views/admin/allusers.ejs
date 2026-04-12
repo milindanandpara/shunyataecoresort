@@ -1,0 +1,63 @@
+<section class="container mx-auto py-8">
+    <h1 class="text-xl font-bold mb-8">Users</h1>
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200">
+            <thead>
+                <tr class="bg-gray-100 border-b">
+                    <th class="text-left px-6 py-3 text-sm font-medium text-gray-700">Name</th>
+                    <th class="text-left px-6 py-3 text-sm font-medium text-gray-700">Email</th>
+                    <th class="text-left px-6 py-3 text-sm font-medium text-gray-700">Status</th>
+                    <th class="text-left px-6 py-3 text-sm font-medium text-gray-700">Created At</th>
+                    <th class="text-left px-6 py-3 text-sm font-medium text-gray-700">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% pizzas.forEach(function(user) { %>
+                    <tr>
+                        <td class="px-6 py-4 text-sm text-gray-800"><%= user.name %></td>
+                        <td class="px-6 py-4 text-sm text-gray-800"><%= user.email %></td>
+                       
+                        <td class="px-6 py-4 text-sm text-gray-800">
+                            <!-- Edit Button -->
+                            
+                    
+                           
+                            <% if (user.blocked) { %>
+                                <span class="text-red-600 font-bold">Blocked</span>
+                            <% } else { %>
+                                <span class="text-green-600 font-bold">Active</span>
+                            <% } %>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-800"><%= new Date(user.createdAt).toLocaleString() %></td>
+                        <td class="px-6 py-4 text-sm text-gray-800">
+                            <button 
+    class="edit-btn btn btn-warning" 
+    data-user-id="<%= user.id %>" 
+    data-user-name="<%= user.name %>" 
+    data-user-email="<%= user.email %>" 
+    data-user-role="<%= user.role %>">
+    Edit
+</button>
+                            <button 
+                                class="block-btn btn btn-danger" 
+                                data-user-id="<%= user.id %>">
+                                <% if (user.blocked) { %>
+                                    Unblock
+                                <% } else { %>
+                                    Block
+                                <% } %>
+                            </button>
+
+                            <!-- Delete Button -->
+                            <button 
+                                class="delete-btn btn btn-danger" 
+                                data-user-id="<%= user.id %>">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</section>

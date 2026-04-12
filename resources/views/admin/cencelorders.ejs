@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cancelled Bookings - Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-100">
+
+  <div class="max-w-6xl mx-auto mt-10 p-5 bg-white rounded-lg shadow-lg">
+    <h1 class="text-2xl font-bold text-gray-700 mb-5">Cancelled Bookings</h1>
+
+    <div id="ordersContainer" class="space-y-4">
+      <% if (cencelorders && cencelorders.length > 0) { %>
+        <% cencelorders.forEach(order => { %>
+          <div class="border rounded-lg p-4 flex justify-between items-center hover:shadow-md transition">
+            <div>
+              <p class="font-semibold text-lg text-gray-800">
+                <!-- if you want to show related user, ensure controller includes User in query -->
+                <%= order.User ? order.User.name : (order.email || 'Customer') %>
+                <span class="text-sm text-gray-500">(<%= order.phone %>)</span>
+              </p>
+
+              <p class="text-sm text-gray-600">💰 ₹<%= order.totalPrice %> | 🧾 <%= order.paymentId || 'N/A' %> | 🧾 <%= order.paymentType %></p>
+              <p class="text-sm text-gray-600">📅 <%= new Date(order.createdAt).toLocaleString() %></p>
+              <p class="text-sm mt-1 text-gray-500">Reason: <%= order.reason || 'Not specified' %></p>
+            </div>
+
+            <div class="flex flex-col items-end space-y-2">
+              <span class="px-3 py-1 rounded-full text-xs font-semibold
+                <% if(order.status === 'pending'){ %> bg-yellow-100 text-yellow-700 <% } %>
+                <% if(order.status === 'approved'){ %> bg-green-100 text-green-700 <% } %>
+                <% if(order.status === 'rejected'){ %> bg-red-100 text-red-700 <% } %>">
+                <%= order.status %>
+              </span>
+
+              <% if(order.status === 'pending'){ %>
+                <div class="flex space-x-2">
+                  <button type="button" data-id="<%= order.id %>" class="approve-btn bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
+                    Approve
+                  </button>
+
+                  <button type="button" data-id="<%= order.id %>" class="reject-btn bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">
+                    Reject
+                  </button>
+                </div>
+              <% } %>
+            </div>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p class="text-gray-600 text-center">No cancelled bookings yet.</p>
+      <% } %>
+    </div>
+  </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // helper to do POST and handle response
+    async function postAction(url) {
+      try {
+        const res = await axios.post(url);
+        const message = res.data && res.data.message ? res.data.message : 'Action completed';
+        alert(message);
+        window.location.reload();
+      } catch (err) {
+        console.error('Action error', err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert('Something went wrong. Check server logs.');
+        }
+      }
+    }
+
+    // Approve buttons
+    document.querySelectorAll('.approve-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const id = this.dataset.id;
+        if (!id) return alert('Missing order id');
+        if (!confirm('Approve this cancellation request and initiate refund?')) return;
+        postAction(`/admin/cencelorders/approve/${id}`);
+      });
+    });
+
+    // Reject buttons
+    document.querySelectorAll('.reject-btn').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const id = this.dataset.id;
+        if (!id) return alert('Missing order id');
+        if (!confirm('Reject this cancellation request?')) return;
+        postAction(`/admin/cencelorders/reject/${id}`);
+      });
+    });
+  });
+</script>
+</body>
+</html>

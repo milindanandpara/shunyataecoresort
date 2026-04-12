@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Booking Cart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Tailwind -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+
+  <!-- Noty -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/noty@3.2.0-beta-deprecated/lib/noty.css" />
+
+  <style>
+   
+    .glass-card {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+    .btn-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.25s ease;
+    }
+    .btn-icon:hover {
+      transform: scale(1.1);
+    }
+    .slide-in {
+      animation: slideIn 0.45s ease-out forwards;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="max-w-2xl mx-auto px-4 py-8 pb-36">
+    <h1 class="text-xl sm:text-xl font-bold mb-4 text-center text-blue-800 tracking-tight">
+      <i class="ri-shopping-cart-2-line text-blue-700 mr-2"></i> Your Booking Cart
+    </h1>
+
+    <% if (session.cart && Object.keys(session.cart.items).length > 0) { %>
+
+      <div class="space-y-4">
+        <% Object.values(session.cart.items).forEach(cartItem => { %>
+          <div class="glass-card shadow-l rounded-xl p-5 flex flex-col sm:flex-row justify-between items-center transition transform hover:scale-[1.01] slide-in">
+
+            <!-- Left Side (Room Details) -->
+            <div class="flex items-start gap-4 w-full sm:w-2/3">
+              <div class="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-l flex items-center justify-center">
+                <i class="ri-hotel-line text-3xl text-blue-700"></i>
+              </div>
+
+              <div>
+                <h2 class="text-m font-semibold"><%= cartItem.item.name %></h2>
+                <p class="text-gray-600 text-sm mt-1">
+                  <i class="ri-calendar-check-line text-blue-600"></i> <b>Check-in:</b> <%= cartItem.item.checkin %><br>
+                  <i class="ri-calendar-line text-blue-600"></i> <b>Check-out:</b> <%= cartItem.item.checkout %>
+                </p>
+                <p class="text-gray-600 text-sm mt-1">
+                  <i class="ri-user-3-line text-blue-600"></i> Guests: <%= cartItem.item.guests %>
+                </p>
+                <p class="text-green-700 font-semibold text-sm mt-2">
+                  ₹<%= cartItem.item.price %> / night
+                </p>
+              </div>
+            </div>
+
+            <!-- Right Side (Actions) -->
+            <div class="flex items-center gap-3 mt-1 sm:mt-0">
+              <button class="btn-icon bg-gray-100 hover:bg-gray-200 w-9 h-9" data-item-id="<%= cartItem.item.id %>" data-action="decrease">
+                <i class="ri-subtract-line text-lg"></i>
+              </button>
+
+              <span class="font-bold text-lg bg-white shadow-inner rounded-md px-4 py-1.5"><%= cartItem.qty %></span>
+
+              <button class="btn-icon bg-gray-100 hover:bg-gray-200 w-9 h-9" data-item-id="<%= cartItem.item.id %>" data-action="increase">
+                <i class="ri-add-line text-lg"></i>
+              </button>
+
+              <button class="btn-icon bg-red-500 hover:bg-red-600 w-9 h-9" data-item-id="<%= cartItem.item.id %>">
+                <i class="ri-delete-bin-6-line text-white text-lg"></i>
+              </button>
+            </div>
+
+          </div>
+        <% }) %>
+      </div>
+
+      <!-- Summary Bar -->
+      <div class="fixed bottom-0 left-0 right-0 sm:static bg-white bg-opacity-90 backdrop-blur-lg shadow-lg sm:rounded-xl p-4 sm:p-6 mt-6 sm:mt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
+        <div class="text-center sm:text-left">
+          <p class="text-sm sm:text-l font-semibold">Rooms: <span class="text-blue-700"><%= session.cart.totalQty %></span></p>
+          <p class="text-sm sm:text-l font-semibold">Total: <span class="text-green-700">₹<%= session.cart.totalPrice %></span></p>
+        </div>
+        <a href="/checkout" class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-md flex items-center justify-center gap-2">
+          <i class="ri-secure-payment-line text-lg"></i> Proceed to Checkout
+        </a>
+      </div>
+
+    <% } else { %>
+      <div class="glass-card shadow-lg rounded-2xl p-10 text-center slide-in">
+        <i class="ri-shopping-cart-line text-6xl text-gray-400 mb-4"></i>
+        <h2 class="text-2xl font-semibold text-gray-700 mb-3">Your booking cart is empty</h2>
+        <p class="text-gray-500 mb-6">Explore our luxury rooms and prebook your stay today.</p>
+        <a href="/" class="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-200 shadow-md">
+          <i class="ri-compass-line mr-1"></i> Explore Rooms
+        </a>
+      </div>
+    <% } %>
+  </div>
+
+  <script>
+    document.querySelectorAll('.btn-icon').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const itemId = btn.dataset.itemId;
+        const action = btn.dataset.action;
+        if (btn.classList.contains('bg-red-500')) {
+          deleteItem(itemId);
+        } else if (action) {
+          updateQuantity(itemId, action);
+        }
+      });
+    });
+
+    function updateQuantity(itemId, action) {
+      axios.post('/prebooking/update-item', { itemId, action })
+        .then(res => {
+          if (res.data.success) {
+            new Noty({ type: 'success', text: 'Updated successfully', timeout: 1000 }).show();
+            setTimeout(() => location.reload(), 800);
+          }
+        }).catch(() => {
+          new Noty({ type: 'error', text: 'Something went wrong', timeout: 1000 }).show();
+        });
+    }
+
+    function deleteItem(itemId) {
+      axios.post('/prebooking/delete-item', { itemId })
+        .then(res => {
+          if (res.data.success) {
+            new Noty({ type: 'success', text: 'Removed from cart', timeout: 1000 }).show();
+            setTimeout(() => location.reload(), 800);
+          }
+        }).catch(() => {
+          new Noty({ type: 'error', text: 'Error removing item', timeout: 1000 }).show();
+        });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,764 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+ 
+  <title>Shunyata Eco Resort — Luxury & Nature</title>  <!-- Tailwind CDN -->  <script src="https://cdn.tailwindcss.com"></script>  <!-- jQuery -->  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>  <!-- AOS for scroll animation -->  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <!-- Swiper for carousels -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <!-- Flatpickr for advanced calendar -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>  <style>
+    /* extras */
+    .hero-overlay { background: linear-gradient(180deg, rgba(0,0,0,0.48), rgba(0,0,0,0.28)); }
+    .glass { background: rgba(255,255,255,0.92); backdrop-filter: }
+    .card-fade { transition: transform .35s ease, box-shadow .35s ease; }
+    .card-fade:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 20px 35px rgba(0,0,0,0.09); }
+    .counter { font-variant-numeric: tabular-nums; }
+    .badge { background: linear-gradient(90deg,#16a34a,#059669); color:white }
+    .offer-img { height:170px; object-fit:cover; width:100%; }
+    .test-img { width:56px; height:56px; object-fit:cover; border-radius:9999px; }
+  </style>
+  </head>
+<body class="overflow-x-hidden font-sans text-gray-800 bg-white">  <main class="overflow-x-hidden pt-0" id="home"><!-- HERO (no header) -->
+
+<!-- Hero Banner with Video Background -->
+<section class="relative h-[60vh] flex items-center justify-center text-center overflow-hidden">
+  
+  <!-- Background Video -->
+  <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover">
+    <source src="img/resort-video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  
+<!-- 🔥 Top White Fade -->
+<div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-b from-white to-transparent z-6"></div>
+
+<!-- 🔥 Bottom White Fade -->
+<div class="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-t from-white to-transparent z-6"></div>
+
+  <!-- Overlay -->
+  <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+
+  <!-- Content -->
+  <div class="relative z-10 max-w-3xl mx-auto px-4 animate-fadeInUp">
+    <h2 class="text-3xl sm:text-4xl md:text-6xl font-bold text-white mb-4 animate-bounce">
+      Reconnect with Nature
+    </h2>
+    <p class="text-base sm:text-lg md:text-2xl text-gray-200 mb-6 animate-fadeIn">
+      50+ Luxury Rooms, Pool, Jungle Walks & More
+    </p>
+    <a href="#booking" class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg text-white font-semibold transition transform hover:scale-105 animate-pulse">
+      Book Your Stay
+    </a>
+  </div>
+</section>
+
+<!-- views/searchRooms.ejs -->
+<section id="booking" class="relative w-full px-4 -mt-40 mb-12 z-20">
+  <div class="max-w-5xl mx-auto bg-white shadow-2xl rounded-2xl p-4 sm:p-6 relative">
+
+    <form id="bookingForm" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+      <!-- Check-in -->
+      <div>
+        <label class="block text-sm font-semibold mb-1">Check-in</label>
+        <input id="checkin" type="text" placeholder="Select Check-in" class="w-full border p-2 rounded-lg focus:ring-2 focus:ring-green-500" required>
+      </div>
+
+      <!-- Check-out -->
+      <div>
+        <label class="block text-sm font-semibold mb-1">Check-out</label>
+        <input id="checkout" type="text" placeholder="Select Check-out" class="w-full border p-2 rounded-lg focus:ring-2 focus:ring-green-500" required>
+      </div>
+
+      <!-- Room Type -->
+      <div>
+        <label class="block text-sm font-semibold mb-1">Room Type</label>
+        <select id="roomType" class="w-full border p-2 rounded-lg focus:ring-2 focus:ring-green-500">
+          <option value="">-- Select Room Type --</option>
+          <% if (roomTypes && roomTypes.length) { %>
+            <% roomTypes.forEach(rt => { %>
+              <option value="<%= rt.id %>"><%= rt.name %> <% if(rt.capacity) { %>— max <%= rt.capacity %><% } %></option>
+            <% }) %>
+          <% } %>
+        </select>
+      </div>
+
+      <!-- Guests -->
+      <div>
+        <label class="block text-sm font-semibold mb-1">Guests</label>
+        <select id="guests" class="w-full border p-2 rounded-lg focus:ring-2 focus:ring-green-500">
+          <option value="1">1 Guest</option>
+          <option value="2" selected>2 Guests</option>
+          <option value="3">3 Guests</option>
+          <option value="4">4+ Guests</option>
+        </select>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="sm:col-span-2 md:col-span-4">
+        <button type="submit" id="checkBtn" class="w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-bold transition transform hover:scale-105">
+          🔍 Check Availability
+        </button>
+      </div>
+    </form>
+
+    <!-- Results Container -->
+    <div id="results" class="hidden mt-8">
+      <h2 class="text-xl font-bold mb-4">Available Rooms</h2>
+      <div id="roomsContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js"></script>
+<!-- Noty CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/noty/lib/noty.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/noty/lib/themes/mint.css" />
+
+<!-- Noty JS -->
+<script src="https://cdn.jsdelivr.net/npm/noty/lib/noty.min.js"></script>
+<!-- Axios -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!-- Lightbox2 CSS & JS for image slider -->
+<link href="https://cdn.jsdelivr.net/npm/lightbox2@2/dist/css/lightbox.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/lightbox2@2/dist/js/lightbox.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+  flatpickr("#checkin", { minDate: "today", altInput: true, altFormat: "F j, Y", dateFormat: "Y-m-d" });
+  flatpickr("#checkout", { minDate: "today", altInput: true, altFormat: "F j, Y", dateFormat: "Y-m-d" });
+
+  const form = document.getElementById("bookingForm");
+
+  form.addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const checkin = document.getElementById("checkin").value;
+    const checkout = document.getElementById("checkout").value;
+    const roomType = document.getElementById("roomType").value;
+    const guests = document.getElementById("guests").value;
+
+    if (!checkin || !checkout) { alert("Please select both check-in and check-out dates."); return; }
+    if (new Date(checkout) <= new Date(checkin)) { alert("Check-out must be after check-in."); return; }
+
+    const btn = document.getElementById("checkBtn");
+    btn.disabled = true; btn.textContent = "Searching...";
+
+    try {
+      const { data: rooms } = await axios.post("/api/search-rooms", { checkin, checkout, roomType, guests });
+      const container = document.getElementById("roomsContainer");
+      container.innerHTML = "";
+
+      if (!rooms.length) {
+        container.innerHTML = '<p class="text-center text-gray-500 w-full">No rooms available for selected dates.</p>';
+      } else {
+       rooms.forEach(rt => {
+  const images = (() => { try { return JSON.parse(rt.images || '[]'); } catch { return []; } })();
+  const img = images.length ? images[0] : "/img/default-room.jpg";
+
+  const card = document.createElement("div");
+  card.className = "bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300";
+  card.innerHTML = `
+    <img src="${img}" id="roomImg-${rt.id}" class="w-full h-48 object-cover cursor-pointer">
+    <div class="p-4 space-y-2">
+      <h3 class="font-bold text-lg">${rt.name}</h3>
+      <p class="text-gray-600 text-sm">${(rt.description||'').substring(0,120)}${(rt.description && rt.description.length>120 ? '...' : '')}</p>
+      <div class="flex items-center justify-between mt-2">
+        <div>
+          <p class="text-green-700 font-semibold">₹${rt.pricePerNight}/night</p>
+          <p class="text-sm text-gray-500">Capacity: <strong>${rt.capacity}</strong> • Available: <strong>${rt.available}</strong></p>
+        </div>
+      </div>
+    </div>
+    <div class="w-36">
+      <button class="bookNowBtn w-full ${rt.available > 0 ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'} text-white py-2 rounded-lg transition"
+        data-room='${JSON.stringify({id: rt.id, name: rt.name, price: rt.pricePerNight, checkin, checkout, guests})}'
+        ${rt.available === 0 ? 'disabled' : ''}>
+        🏨 Book Now
+      </button>
+    </div>
+  `;
+  container.appendChild(card);
+
+  document.getElementById(`roomImg-${rt.id}`).addEventListener("click", () => openRoomSlider(images));
+});
+
+        container.querySelectorAll(".bookNowBtn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            const room = JSON.parse(btn.dataset.room);
+            addToPrebooking(room);
+          });
+        });
+      }
+
+      document.getElementById("results").classList.remove("hidden");
+      document.getElementById("results").scrollIntoView({ behavior: "smooth" });
+
+    } catch(err) { console.error(err); alert("Something went wrong while searching. Try again."); }
+    finally { btn.disabled=false; btn.textContent="🔍 Check Availability"; }
+  });
+async function addToPrebooking(room) {
+    try {
+        const { data: res } = await axios.post("/prebooking/add", room);
+        document.querySelector('#cartCounter').innerText = res.totalQty;
+
+        // Show notification
+        new Noty({ 
+            type: 'success', 
+            timeout: 1000, 
+            text: 'Room added to prebooking', 
+            progressBar: false 
+        }).show();
+
+        // Redirect after 1 second (1000 ms)
+        setTimeout(() => {
+            window.location.href = "/pre-confirm-booking";
+        }, 1000);
+
+    } catch(err) {
+        console.error(err);
+        if(err.response && err.response.status === 401) window.location.href = "/login";
+        else alert("Could not add to prebooking. Try again.");
+    }
+}
+
+  function openRoomSlider(images) {
+    if(!images.length) return;
+    const tempContainerId="tempRoomSlider";
+    let tempContainer=document.getElementById(tempContainerId);
+    if(!tempContainer){ tempContainer=document.createElement("div"); tempContainer.id=tempContainerId; tempContainer.style.display="none"; document.body.appendChild(tempContainer); }
+    tempContainer.innerHTML="";
+    images.forEach((src,idx)=>{
+      const a=document.createElement("a");
+      a.href=src;
+      a.setAttribute("data-lightbox","room-slider");
+      a.setAttribute("data-title",`Image ${idx+1}`);
+      tempContainer.appendChild(a);
+    });
+    tempContainer.querySelector("a").click();
+  }
+
+});
+</script>
+<style>
+  @keyframes fadeInUp { 0%{opacity:0; transform:translateY(30px);} 100%{opacity:1; transform:translateY(0);} }
+  .animate-fadeInUp { animation: fadeInUp 1s ease-out forwards; }
+
+  @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+  .animate-fadeIn { animation: fadeIn 2s ease-in forwards; }
+</style>
+<!-- EXPERIENCE COUNTER SECTION (4 values, animated order) -->
+<section class="py-14">
+  <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-center">
+    <div data-aos="fade-right">
+      <div class="grid grid-cols-2 gap-6">
+        <div class="p-6 bg-white rounded-xl shadow text-center">
+           <img src="img/years.png" class="mx-auto mb-2 w-16 h-16">
+          <div class="text-3xl font-extrabold text-green-700 counter" data-target="13">0</div>
+          <div class="text-sm text-gray-600 mt-2">Years of Experience</div>
+        </div>
+        <div class="p-6 bg-white rounded-xl shadow text-center">
+          <img src="img/security.png" class="mx-auto mb-4 w-16  h-16">
+          <div class="text-3xl font-extrabold text-green-700 counter" data-target="50">0</div>
+          <div class="text-sm text-gray-600 mt-2">Luxury Suites</div>
+        </div>
+        <div class="p-6 bg-white rounded-xl shadow text-center">
+          <img src="img/happy.png" class="mx-auto mb-4 w-16  h-16">
+          <div class="text-3xl font-extrabold text-green-700 counter" data-target="120">0</div>
+          <div class="text-sm text-gray-600 mt-2">Happy Guests</div>
+        </div>
+        <div class="p-6 bg-white rounded-xl shadow text-center">
+          <img src="img/villa.png" class="mx-auto mb-4 w-16  h-16">
+          <div class="text-3xl font-extrabold text-green-700 counter" data-target="350">0</div>
+          <div class="text-sm text-gray-600 mt-2">Private Pools & Villas</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative"  data-aos="fade-up" data-aos="fade-left">
+      <img src="/img/banner.jpeg" alt="experience" class="rounded-xl shadow-lg object-cover w-full h-96  transition-transform duration-500 hover:scale-110">
+      <div class="absolute bottom-6 left-6 bg-white p-4 rounded-lg shadow  transition-transform duration-500 hover:scale-110">
+        <div class="font-bold">Reconnect. Unwind. Repeat.</div>
+        <div class="text-sm text-gray-600">Luxury stays, sustainable practices</div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ROOMS GRID -->
+<section id="rooms" class="py-16 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-6">
+    
+    <h2 class="text-3xl font-bold text-center mb-3">
+      Our Rooms & Suites
+    </h2>
+
+    <p class="text-center text-gray-600 mb-8">
+      Designed for every mood — from intimate escapes to family adventures.
+    </p>
+
+    <div id="roomsGrid" class="grid md:grid-cols-3 gap-6"></div>
+
+  </div>
+</section>
+
+<!-- 🔥 IMAGE SLIDER MODAL -->
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-90 hidden items-center justify-center z-50">
+
+  <!-- CLOSE -->
+  <button onclick="closeSlider()" 
+    class="absolute top-5 right-5 text-white text-2xl bg-black bg-opacity-40 px-3 py-1 rounded-full hover:bg-opacity-70">
+    ✖
+  </button>
+
+  <!-- PREV -->
+  <button onclick="prevImg()" 
+    class="absolute left-5 top-1/2 transform -translate-y-1/2 text-white text-4xl bg-black bg-opacity-40 px-3 py-2 rounded-full hover:bg-opacity-70">
+    ❮
+  </button>
+
+  <!-- IMAGE -->
+  <img id="sliderImage" 
+    class="max-h-[80%] max-w-[90%] rounded-lg shadow-lg transition duration-300">
+
+  <!-- NEXT -->
+  <button onclick="nextImg()" 
+    class="absolute right-5 top-1/2 transform -translate-y-1/2 text-white text-4xl bg-black bg-opacity-40 px-3 py-2 rounded-full hover:bg-opacity-70">
+    ❯
+  </button>
+</div>
+
+<!-- AXIOS -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+let currentImages = [];
+let currentIndex = 0;
+
+document.addEventListener("DOMContentLoaded", async function () {
+
+  try {
+    const { data: rooms } = await axios.get("/api/room-types");
+
+    const container = document.getElementById("roomsGrid");
+    container.innerHTML = "";
+
+    if (!rooms.length) {
+      container.innerHTML = `
+        <p class="text-center text-gray-500 col-span-3">
+          No rooms available.
+        </p>`;
+      return;
+    }
+
+    rooms.forEach((rt) => {
+
+      // ✅ images parse safe
+      let images = rt.images || [];
+      if (typeof images === "string") {
+        try { images = JSON.parse(images); } catch(e) { images = []; }
+      }
+
+      // 🔥 image fix
+      const img = images.length 
+        ? encodeURI(images[0]) 
+        : "/img/default-room.jpg";
+
+      const card = document.createElement("div");
+      card.className = "bg-white rounded-xl overflow-hidden shadow-lg hover:scale-105 transition duration-300";
+
+      card.innerHTML = `
+        <!-- IMAGE -->
+        <div class="relative h-56 overflow-hidden cursor-pointer"
+             onclick='openSlider(${JSON.stringify(images)})'>
+
+          <img src="${img}" 
+               onerror="this.src='/img/default-room.jpg'"
+               class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+
+          ${rt.quantity > 5 ? `
+            <div class="absolute top-3 right-3 bg-green-600 text-white px-3 py-1 rounded">
+              Popular
+            </div>` : ''}
+        </div>
+
+        <!-- CONTENT -->
+        <div class="p-5">
+          <h3 class="text-xl font-bold">${rt.name}</h3>
+
+          <p class="text-sm text-gray-600 mt-2">
+            ${(rt.description || '').substring(0,100)}
+            ${(rt.description && rt.description.length > 100 ? '...' : '')}
+          </p>
+
+          <div class="mt-4 flex items-center justify-between">
+            <div>
+              <div class="text-xl font-bold">
+                ₹${rt.pricePerNight}
+                <span class="text-sm font-normal">/ night</span>
+              </div>
+
+              <p class="text-sm text-gray-500">
+                Capacity: <strong>${rt.capacity}</strong>
+              </p>
+
+              <p class="text-sm text-gray-500">
+                Rooms: <strong>${rt.quantity}</strong>
+              </p>
+            </div>
+
+            <button 
+              class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition"
+              onclick="selectRoom('${rt.id}')">
+              Book
+            </button>
+          </div>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error(err);
+
+    document.getElementById("roomsGrid").innerHTML = `
+      <p class="text-center text-red-500 col-span-3">
+        Failed to load rooms.
+      </p>`;
+  }
+
+});
+
+
+// 🔥 OPEN SLIDER
+function openSlider(images) {
+  if (!images.length) return;
+
+  currentImages = images.map(img => encodeURI(img));
+  currentIndex = 0;
+
+  document.getElementById("imageModal").classList.remove("hidden");
+  document.getElementById("imageModal").classList.add("flex");
+
+  showImage();
+}
+
+// 🔥 SHOW IMAGE
+function showImage() {
+  document.getElementById("sliderImage").src = currentImages[currentIndex];
+}
+
+// 🔥 NEXT
+function nextImg() {
+  currentIndex = (currentIndex + 1) % currentImages.length;
+  showImage();
+}
+
+// 🔥 PREV
+function prevImg() {
+  currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+  showImage();
+}
+
+// 🔥 CLOSE
+function closeSlider() {
+  const modal = document.getElementById("imageModal");
+  modal.classList.add("hidden");
+  modal.classList.remove("flex");
+}
+
+// 🔥 BOOK SELECT
+function selectRoom(roomId) {
+  const select = document.getElementById("roomType");
+
+  if(select){
+    select.value = roomId;
+    document.getElementById("booking")
+      .scrollIntoView({ behavior: "smooth" });
+  }
+}
+</script>
+<!-- AMENITIES (kept as requested) -->
+<section id="amenities" class="py-16">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 class="text-3xl font-bold text-center mb-8" data-aos="fade-up">Amenities</h2>
+    <div class="grid md:grid-cols-5 gap-6">
+      <div class="p-6 bg-white rounded-xl shadow card-fade text-center" data-aos="flip-left">
+        <img src="https://img.icons8.com/color/96/swimming-pool.png" class="mx-auto mb-4">
+        <h4 class="font-bold">Swimming Pool</h4>
+        <p class="text-sm text-gray-600 mt-2">Infinity & kids pool</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl shadow card-fade text-center" data-aos="flip-left" data-aos-delay="100">
+        <img src="https://img.icons8.com/color/96/spa.png" class="mx-auto mb-4">
+        <h4 class="font-bold">Spa & Wellness</h4>
+        <p class="text-sm text-gray-600 mt-2">Therapies & yoga</p>
+      </div>
+     <div class="p-6 bg-white rounded-xl shadow card-fade text-center" data-aos="flip-left" data-aos-delay="200">
+        <img src="https://img.icons8.com/color/96/restaurant.png" class="mx-auto mb-4">
+        <h4 class="font-bold">Restaurant & Bar</h4>
+        <p class="text-sm text-gray-600 mt-2">Farm-to-table dining</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl shadow card-fade text-center" data-aos="flip-left" data-aos-delay="300">
+        <img src="https://img.icons8.com/color/96/bench-press-with-dumbbells.png" class="mx-auto mb-4">
+        <h4 class="font-bold">Fitness Center</h4>
+      
+        <p class="text-sm text-gray-600 mt-2">Modern equipment</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl shadow card-fade text-center" data-aos="flip-left" data-aos-delay="400">
+        <img src="https://img.icons8.com/color/96/wifi.png" class="mx-auto mb-4">
+        <h4 class="font-bold">Free WiFi</h4>
+        <p class="text-sm text-gray-600 mt-2">High speed internet</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS with photos -->
+<section class="py-16 bg-gray-50">
+  <div class="max-w-6xl mx-auto px-6">
+    <h2 class="text-3xl font-bold text-center mb-8" data-aos="fade-up">What Guests Say</h2>
+    <div class="swiper mySwiper" data-aos="fade-up">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide p-6 bg-white rounded-xl shadow flex items-start gap-4">
+          <img src="https://i.pravatar.cc/100?img=1" class="test-img" alt="guest">
+          <div>
+            <p class="italic">"Best stay ever — private pool and unforgettable service."</p>
+            <div class="mt-3 font-bold">Arjun</div>
+          </div>
+        </div>
+        <div class="swiper-slide p-6 bg-white rounded-xl shadow flex items-start gap-4">
+          <img src="https://i.pravatar.cc/100?img=2" class="test-img" alt="guest">
+          <div>
+            <p class="italic">"Perfect honeymoon. Everything was magical."</p>
+            <div class="mt-3 font-bold">Meera & Rohit</div>
+          </div>
+        </div>
+        <div class="swiper-slide p-6 bg-white rounded-xl shadow flex items-start gap-4">
+          <img src="https://i.pravatar.cc/100?img=3" class="test-img" alt="guest">
+          <div>
+            <p class="italic">"Amazing  jungle walk experience."</p>
+            <div class="mt-3 font-bold">Pooja</div>
+          </div>
+        </div>
+      </div>
+      <div class="swiper-pagination mt-6"></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE SLOGAN -->
+<section class="py-20 bg-green-700 text-white">
+  <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-center">
+    <div data-aos="fade-right">
+      <h2 class="text-4xl font-extrabold">Experience luxury like never before</h2>
+      <p class="mt-4 text-gray-200">Personalised stays, tailor-made experiences and memories that last a lifetime.</p>
+    </div>
+    <div data-aos="fade-left">
+      <img src="img/green.jpeg" class="rounded-xl shadow-lg w-full h-64 object-cover" />
+    </div>
+  </div>
+</section>
+
+
+<!-- LOCATION & ACTIVITIES (animated images + details) -->
+<section id="location" class="py-16 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 class="text-3xl font-bold text-center mb-8" data-aos="fade-up">Location & Nearby Activities</h2>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="p-6 bg-white rounded-xl shadow card-fade" data-aos="fade-right">
+        <img src="img/somnath.jpg" class="w-full h-40 object-cover rounded-md mb-3" />
+        <h4 class="font-bold">Somnath Temple</h4>
+        <p class="text-sm text-gray-600 mt-1">Sacred Jyotirlinga temple by the Arabian Sea, known for its divine aura and stunning architecture.</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl shadow card-fade" data-aos="fade-up" data-aos-delay="100">
+        <img src="img/gir.jpg" class="w-full h-40 object-cover rounded-md mb-3" />
+        <h4 class="font-bold">Gir National Park</h4>
+        <p class="text-sm text-gray-600 mt-1">Home of the Asiatic lions, offering thrilling wildlife safaris and natural beauty.</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl shadow card-fade" data-aos="fade-left" data-aos-delay="200">
+        <img src="img/beach.jpg" class="w-full h-40 object-cover rounded-md mb-3" />
+        <h4 class="font-bold">Madhavpur Beach</h4>
+        <p class="text-sm text-gray-600 mt-1">Peaceful beach with golden sands and scenic views, perfect for relaxation and sunsets.</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl shadow card-fade" data-aos="fade-right" data-aos-delay="300">
+        <img src="img/fort.jpeg" class="w-full h-40 object-cover rounded-md mb-3" />
+        <h4 class="font-bold">Uparkot Fort</h4>
+        <p class="text-sm text-gray-600 mt-1">Historic fort with ancient architecture, step wells, and panoramic city views.</p>
+      </div>
+      <div class="p-6 bg-white rounded-xl shadow card-fade" data-aos="fade-left" data-aos-delay="400">
+        <img src="img/jungle.jpeg" class="w-full h-40 object-cover rounded-md mb-3" />
+        <h4 class="font-bold">Jungle Safari</h4>
+        <p class="text-sm text-gray-600 mt-1">Guided safaris, birdwatching & nature trails.</p>
+      </div>
+    </div>
+    <div class="mt-6 text-sm text-gray-600">All activities can be booked through our concierge. Transport and guided tours available on request.</div>
+  </div>
+</section>
+<!-- CONTACT & DETAILED BOOKING FORM -->
+<section id="contact" class="overflow-x-hidden py-16 bg-gray-50">
+  <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12">
+    
+    <!-- Contact Info + Map -->
+    <div data-aos="fade-right" class="space-y-6">
+      <h3 class="text-3xl font-bold text-gray-800">Get in Touch</h3>
+      <p class="text-gray-600 mt-2">Questions about a package or a special request? Reach out and we'll help plan the perfect stay.</p>
+
+      <div class="mt-6 space-y-4 text-gray-700">
+        <div>
+          <p class="font-semibold">Phone</p>
+          <p>+91 9737164078</p>
+        </div>
+        <div>
+          <p class="font-semibold">Email</p>
+          <p>reservations@shunyataresort.com</p>
+        </div>
+        <div>
+          <p class="font-semibold">Address</p>
+          <p>Shunyata Eco-Resort, Vadal-Junagadh Road, Near Vishwagram Vidhyapith, 362310</p>
+        </div>
+      </div>
+
+      <!-- Google Map -->
+      <div class="mt-6 rounded-xl overflow-hidden shadow-lg">
+        <iframe
+          class="w-full h-64 sm:h-80"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3709.7276280934!2d70.48607849999999!3d21.596552400000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39580300181a492b%3A0x595e616746d24842!2sShunyata%20Eco-Resort!5e0!3m2!1sen!2sin!4v1759098483438!5m2!1sen!2sin"
+          style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div data-aos="fade-left">
+      <form class="bg-white p-8 rounded-2xl shadow-2xl space-y-6">
+        <div class="grid md:grid-cols-2 gap-4">
+          <input class="border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition" placeholder="Full Name" />
+          <input type="email" class="border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none transition" placeholder="Email" />
+        </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <input type="date" class="border p-3 rounded-lg focus:ring-2 focus:ring-green-500 outline-none w-full" />
+  <input type="date" class="border p-3 rounded-lg focus:ring-2 focus:ring-green-500 outline-none w-full" />
+</div>
+        <textarea class="border border-gray-300 p-3 rounded-lg w-full focus:ring-2 focus:ring-green-500 focus:outline-none transition" rows="4" placeholder="Message or requirements"></textarea>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <button class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold w-full sm:w-auto">Send Enquiry</button>
+          <a href="#booking" class="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-100 text-gray-800 w-full sm:w-auto text-center transition">Book Now</a>
+        </div>
+      </form>
+    </div>
+    
+  </div>
+</section>
+
+  </main>  <!-- FOOTER -->  <footer class="overflow-x-hidden bg-gray-900 text-gray-200 py-12">
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-6">
+      <div>
+        <div class="text-lg font-bold text-white">Shunyata Eco Resort</div>
+        <p class="text-sm text-gray-400 mt-2">Luxury • Nature • Sustainability</p>
+        <div class="mt-4 text-sm text-gray-400">© 2025 shunyataecoresort.com Shunyata Eco Resort </div>
+      </div>
+      <div>
+        <h4 class="font-bold">Quick Links</h4>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li><a href="#rooms">Rooms</a></li>
+          <li><a href="#amenities">Amenities</a></li>
+          <li><a href="#offers">Offers</a></li>
+          <li><a href="#events">Events</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold">Useful-Links</h4>
+        <ul class="mt-3 space-y-2 text-sm">
+          <li><a href="#rooms">About-us</a></li>
+          <li><a href="#amenities">Why-Shunyata</a></li>
+          <li><a href="#offers">Teams</a></li>
+          <li><a href="#events"> Blogs</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold">Contact-us</h4>
+        <p class="text-sm mt-3">reservations@shunyataresort.com</p>
+        <p class="text-sm">+91 9737164078</p>
+          <p class="text-sm">Shunyata Eco-Resort 
+  an eco-friendly resort 
+Vadal -junagadh Road,
+Near vishwagram vidhyapith.
+362310</p>
+        
+      </div>
+      <div>
+        <h4 class="font-bold">Follow Us</h4>
+        <div class="mt-3 flex gap-3">
+          <a class="w-10 h-10 rounded bg-white/5 flex items-center justify-center"><img src="img/instagram.png" class="mx-auto mb--2 w-8  h-8"></a>
+          <a class="w-10 h-10 rounded bg-white/5 flex items-center justify-center"><img src="img/facebook.png" class="mx-auto mb--2 w-8  h-8"></a>
+          <a class="w-10 h-10 rounded bg-white/5 flex items-center justify-center"><img src="img/youtube.png" class="mx-auto mb--2 w-8  h-8"></a>
+        </div>
+      </div>
+    </div>
+  </footer>  <!-- SCRIPTS -->  <script>
+    AOS.init({once:true, duration:800});
+
+    // flatpickr
+    flatpickr('.flatpickr', { minDate: 'today', dateFormat: 'Y-m-d' });
+
+    // counters animate in sequence
+    function runCountersSequentially(){
+      const counters = document.querySelectorAll('.counter');
+      let index=0;
+      function runNext(){
+        if(index>=counters.length) return;
+        const el = counters[index];
+        const target = parseInt(el.getAttribute('data-target')) || 0;
+        let start = 0; const duration = 900; const step = Math.max(1, Math.floor(target/(duration/30)));
+        const iv = setInterval(()=>{ start+=step; if(start>=target){ start=target; clearInterval(iv); index++; setTimeout(runNext,200); } el.innerText = start; },30);
+      }
+      runNext();
+    }
+    runCountersSequentially();
+
+    // initialize swiper for testimonials
+    var swiper = new Swiper('.mySwiper', {
+      slidesPerView: 1,
+      spaceBetween: 20,
+      loop: true,
+      pagination: { el: '.swiper-pagination', clickable: true },
+      breakpoints: { 768:{ slidesPerView:2 }, 1024:{ slidesPerView:3 }}
+    });
+
+    // countdown timers
+    function initCountdown(){
+      document.querySelectorAll('[data-countdown]').forEach(function(el){
+        const end = new Date(el.getAttribute('data-countdown'));
+        function tick(){
+          const now = new Date();
+          const diff = end - now;
+          if(diff<=0){ el.innerText = 'Offer ended'; return; }
+          const days = Math.floor(diff/ (1000*60*60*24));
+          const hrs = Math.floor((diff/ (1000*60*60))%24);
+          const mins = Math.floor((diff/ (1000*60))%60);
+          el.innerText = days + 'd ' + hrs + 'h ' + mins + 'm';
+        }
+        tick(); setInterval(tick,60000);
+      });
+    }
+    initCountdown();
+
+    // booking search click (demo) - replace with AJAX to availability API
+    $('#searchBtn').on('click', function(e){
+      e.preventDefault();
+      const ci = $('#ci').val(); const co = $('#co').val(); const guests = $('#guests').val(); const dest = $('#dest').val();
+      if(!ci || !co){ alert('Please select check-in and check-out dates'); return; }
+      // demo modal (replace with AJAX)
+      alert('Searching availability for ' + dest + ' from ' + ci + ' to ' + co + ' for ' + guests);
+    });
+
+  </script></body>
+</html>

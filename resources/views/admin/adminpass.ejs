@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/adminhome.css">
+</head>
+<body>
+    <!-- Main Content -->
+    <main class="main-content">
+        <header>
+            <h1>Welcome, <%= user.name %></h1>
+        </header>
+        <section class="dashboard grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="card bg-white p-4 shadow-lg rounded">
+                <h3>Total Bookings</h3>
+                <p id="total-orders"><%= totalOrders %></p>
+                <a href="/admin/orders" class="py-2 px-2 font-medium text-white bg-blue-500 rounded hover:bg-blue-400 transition duration-300">Visualizza tutto</a>
+            </div>
+            <div class="card bg-white p-4 shadow-lg rounded">
+                <h3>Total Users</h3>
+                <p id="total-users"><%= totalUsers %></p>
+                <a href="/admin/users" class="py-2 px-2 font-medium text-white bg-blue-500 rounded hover:bg-blue-400 transition duration-300">Visualizza tutto</a>
+            </div>
+            <div class="card bg-white p-4 shadow-lg rounded">
+                <h3>Total products</h3>
+                <p id="total-products"><%= totalProducts %></p>
+                <a href="/admin/products" class="py-2 px-2 font-medium text-white bg-blue-500 rounded hover:bg-blue-400 transition duration-300">Visualizza tutto</a>
+            </div>
+            <div class="card bg-white p-4 shadow-lg rounded">
+                <h3>Total Cencel-Booking</h3>
+                <p id="total-cencel-orders"><%= totalCencelOrders %></p>
+                <a href="/admin/cencelorders" class="py-2 px-2 font-medium text-white bg-red-500 rounded hover:bg-red-400 transition duration-300">Visualizza tutto</a>
+            </div>
+        </section>
+    </main>
+    <script src="js/adminhome.js"></script>
+</body>
+</html>

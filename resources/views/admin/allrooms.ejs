@@ -1,0 +1,281 @@
+<section class="rooms container mx-auto py-8">
+  <div class="flex justify-end mb-4">
+    <button
+      class="px-6 py-3 bg-green-500 text-white text-lg font-semibold rounded-lg hover:bg-green-600 focus:outline-none"
+      id="addNewRoom"
+    >
+      Add New Room
+    </button>
+  </div>
+
+  <h1 class="text-xl font-bold mb-8">Rooms:</h1>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full table-auto bg-white shadow-lg rounded-lg border-collapse">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Images</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Name</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Capacity</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Quantity</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Price / Night</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Description</th>
+          <th class="px-4 py-2 text-left text-sm font-medium text-gray-600">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% rooms.forEach(room => { %>
+          <tr data-id="<%= room.id %>" class="border-t">
+            <td class="px-4 py-2 flex space-x-2 flex-wrap">
+              <% (room.images || []).forEach(img => { %>
+                <img src="<%= img %>" class="w-16 h-16 rounded-lg object-cover">
+              <% }) %>
+            </td>
+            <td class="px-4 py-2 text-sm text-gray-700"><%= room.name %></td>
+            <td class="px-4 py-2 text-sm text-gray-700"><%= room.capacity %></td>
+            <td class="px-4 py-2 text-sm text-gray-700"><%= room.quantity %></td>
+            <td class="px-4 py-2 text-sm text-gray-700">€ <%= room.pricePerNight %></td>
+            <td class="px-4 py-2 text-sm text-gray-700"><%= room.description || '-' %></td>
+            <td class="px-4 py-2 text-sm">
+              <div class="flex space-x-2 justify-start">
+                <button
+                  class="edit-room-btn px-4 py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 focus:outline-none"
+                  data-room='<%= JSON.stringify(room) %>'
+                >
+                  Edit
+                </button>
+                <button
+                  class="delete-btn px-4 py-2 bg-red-500 text-white text-sm rounded hover:bg-red-600 focus:outline-none"
+                  data-room-id="<%= room.id %>"
+                >
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Add Room Modal -->
+  <!-- Add Room Modal -->
+<!-- Add Room Modal -->
+<div id="newRoomModal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="bg-white rounded-lg shadow-lg w-96 max-h-[90vh] flex flex-col">
+
+    <!-- Header -->
+    <h2 class="text-xl font-bold p-4 border-b flex-shrink-0">Add New Room</h2>
+
+    <!-- Scrollable Form Content -->
+    <div class="flex-1 overflow-y-auto p-4">
+      <form id="newRoomForm" enctype="multipart/form-data">
+        <input type="hidden" id="existingImages" value="[]">
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Room Name</label>
+          <input type="text" name="name" class="w-full border-gray-300 rounded-md shadow-sm" required>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Capacity</label>
+          <input type="number" name="capacity" class="w-full border-gray-300 rounded-md shadow-sm" required>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Quantity</label>
+          <input type="number" name="quantity" class="w-full border-gray-300 rounded-md shadow-sm" required>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Price per Night</label>
+          <input type="text" name="pricePerNight" class="w-full border-gray-300 rounded-md shadow-sm" required>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Description</label>
+          <textarea name="description" class="w-full border-gray-300 rounded-md shadow-sm"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Upload Images</label>
+          <input type="file" name="images" id="newImages" multiple class="w-full border-gray-300 rounded-md shadow-sm">
+          <div id="imagePreviewContainer" class="mt-4 flex flex-wrap gap-4 max-h-48 overflow-y-auto border p-2 rounded-lg"></div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Buttons Fixed Bottom -->
+    <div class="flex justify-end space-x-2 p-4 border-t flex-shrink-0 bg-white">
+      <button type="button" id="cancelAdd" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md">Cancel</button>
+      <button type="submit" form="newRoomForm" class="px-4 py-2 bg-blue-500 text-white rounded-md">Add</button>
+    </div>
+  </div>
+</div>
+
+  <!-- Edit Room Modal -->
+  <div id="editRoomModal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+      <h2 class="text-xl font-bold mb-4">Edit Room</h2>
+      <form id="editRoomForm" enctype="multipart/form-data">
+        <input type="hidden" name="roomId" id="editRoomId">
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Room Name</label>
+          <input type="text" name="name" id="editName" class="w-full border-gray-300 rounded-md shadow-sm" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Capacity</label>
+          <input type="number" name="capacity" id="editCapacity" class="w-full border-gray-300 rounded-md shadow-sm" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Quantity</label>
+          <input type="number" name="quantity" id="editQuantity" class="w-full border-gray-300 rounded-md shadow-sm" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Price per Night</label>
+          <input type="text" name="pricePerNight" id="editPrice" class="w-full border-gray-300 rounded-md shadow-sm" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Description</label>
+          <textarea name="description" id="editDescription" class="w-full border-gray-300 rounded-md shadow-sm"></textarea>
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700">Upload Images</label>
+          <input type="file" name="images" id="editImages" multiple class="w-full border-gray-300 rounded-md shadow-sm">
+          <div id="editImagePreviewContainer" class="mt-4 flex flex-wrap gap-4"></div>
+        </div>
+        <div class="flex justify-end space-x-2">
+          <button type="button" id="cancelEdit" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  // OPEN ADD ROOM MODAL
+  document.getElementById('addNewRoom').addEventListener('click', () => {
+    document.getElementById('newRoomModal').classList.remove('hidden');
+  });
+
+  // CANCEL ADD
+  document.getElementById('cancelAdd').addEventListener('click', () => {
+    document.getElementById('newRoomForm').reset();
+    document.getElementById('imagePreviewContainer').innerHTML = '';
+    document.getElementById('newRoomModal').classList.add('hidden');
+  });
+
+  // ADD IMAGE PREVIEW
+  document.getElementById('newImages').addEventListener('change', (e) => {
+    const files = e.target.files;
+    const container = document.getElementById('imagePreviewContainer');
+    container.innerHTML = '';
+    Array.from(files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = document.createElement('img');
+        img.src = event.target.result;
+        img.className = 'w-20 h-20 object-cover rounded-lg';
+        container.appendChild(img);
+      }
+      reader.readAsDataURL(file);
+    });
+  });
+
+  // SUBMIT ADD ROOM
+  document.getElementById('newRoomForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    try {
+      const res = await fetch('/admin/add-room', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (data.room) location.reload();
+      else alert(data.message);
+    } catch (err) { console.error(err); alert('Something went wrong!'); }
+  });
+
+  // OPEN EDIT ROOM MODAL
+  document.querySelectorAll('.edit-room-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const room = JSON.parse(btn.dataset.room);
+      document.getElementById('editRoomId').value = room.id;
+      document.getElementById('editName').value = room.name;
+      document.getElementById('editCapacity').value = room.capacity;
+      document.getElementById('editQuantity').value = room.quantity;
+      document.getElementById('editPrice').value = room.pricePerNight;
+      document.getElementById('editDescription').value = room.description || '';
+
+      // preview images
+      const container = document.getElementById('editImagePreviewContainer');
+      container.innerHTML = '';
+      (room.images || []).forEach(img => {
+        const imgEl = document.createElement('img');
+        imgEl.src = img;
+        imgEl.className = 'w-20 h-20 object-cover rounded-lg';
+        container.appendChild(imgEl);
+      });
+
+      document.getElementById('editRoomModal').classList.remove('hidden');
+    });
+  });
+
+  // CANCEL EDIT
+  document.getElementById('cancelEdit').addEventListener('click', () => {
+    document.getElementById('editRoomForm').reset();
+    document.getElementById('editImagePreviewContainer').innerHTML = '';
+    document.getElementById('editRoomModal').classList.add('hidden');
+  });
+
+  // EDIT IMAGE PREVIEW
+  document.getElementById('editImages').addEventListener('change', (e) => {
+    const files = e.target.files;
+    const container = document.getElementById('editImagePreviewContainer');
+    container.innerHTML = '';
+    Array.from(files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = document.createElement('img');
+        img.src = event.target.result;
+        img.className = 'w-20 h-20 object-cover rounded-lg';
+        container.appendChild(img);
+      }
+      reader.readAsDataURL(file);
+    });
+  });
+
+  // SUBMIT EDIT ROOM
+  document.getElementById('editRoomForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    try {
+      const res = await fetch('/admin/edit-room', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (data.room) location.reload();
+      else alert(data.message);
+    } catch (err) { console.error(err); alert('Something went wrong!'); }
+  });
+
+  // DELETE ROOM
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('Are you sure you want to delete this room?')) return;
+      const roomId = btn.dataset.roomId;
+      try {
+        const res = await fetch('/admin/delete-room', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ roomId })
+        });
+        const data = await res.json();
+        if (data.message) location.reload();
+      } catch (err) { console.error(err); alert('Something went wrong!'); }
+    });
+  });
+</script>

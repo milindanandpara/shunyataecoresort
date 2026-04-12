@@ -1,0 +1,68 @@
+/home/fiqssphh/shunyata/shunyata/routes/web.js:50
+    app.get(/forgot-password, forgotcontroller().forgotPassword);
+            ^
+
+SyntaxError: Invalid regular expression: missing /
+    at internalCompileFunction (node:internal/vm:76:18)
+    at wrapSafe (node:internal/modules/cjs/loader:1283:20)
+    at Module._compile (node:internal/modules/cjs/loader:1328:27)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+    at require (node:internal/modules/helpers:177:18)
+    at Object.<anonymous> (/home/fiqssphh/shunyata/shunyata/server.js:82:1)
+    at Module._compile (node:internal/modules/cjs/loader:1364:14)
+
+Node.js v18.20.8
+/home/fiqssphh/shunyata/shunyata/routes/web.js:50
+    app.get(/forgot-password, forgotcontroller().forgotPassword);
+            ^
+
+SyntaxError: Invalid regular expression: missing /
+    at internalCompileFunction (node:internal/vm:76:18)
+    at wrapSafe (node:internal/modules/cjs/loader:1283:20)
+    at Module._compile (node:internal/modules/cjs/loader:1328:27)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1422:10)
+    at Module.load (node:internal/modules/cjs/loader:1203:32)
+    at Module._load (node:internal/modules/cjs/loader:1019:12)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+    at require (node:internal/modules/helpers:177:18)
+    at Object.<anonymous> (/home/fiqssphh/shunyata/shunyata/server.js:82:1)
+    at Module._compile (node:internal/modules/cjs/loader:1364:14)
+
+Node.js v18.20.8
+❌ Google Auth Error: ValidationError [SequelizeValidationError]: notNull Violation: User.password cannot be null
+    at InstanceValidator._validate (/home/fiqssphh/shunyata/shunyata/node_modules/sequelize/lib/instance-validator.js:50:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async InstanceValidator._validateAndRunHooks (/home/fiqssphh/shunyata/shunyata/node_modules/sequelize/lib/instance-validator.js:60:7)
+    at async InstanceValidator.validate (/home/fiqssphh/shunyata/shunyata/node_modules/sequelize/lib/instance-validator.js:54:12)
+    at async model.save (/home/fiqssphh/shunyata/shunyata/node_modules/sequelize/lib/model.js:2426:7)
+    at async User.create (/home/fiqssphh/shunyata/shunyata/node_modules/sequelize/lib/model.js:1362:12)
+    at async Strategy._verify (/home/fiqssphh/shunyata/shunyata/app/config/passport.js:70:18) {
+  errors: [
+    ValidationErrorItem {
+      message: 'User.password cannot be null',
+      type: 'notNull Violation',
+      path: 'password',
+      value: null,
+      origin: 'CORE',
+      instance: [User],
+      validatorKey: 'is_null',
+      validatorName: null,
+      validatorArgs: []
+    }
+  ]
+}
+SequelizeValidationError: notNull Violation: User.password cannot be null
+    at InstanceValidator._validate (/home/fiqssphh/shunyata/shunyata/node_modules/sequelize/lib/instance-validator.js:50:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async InstanceValidator._validateAndRunHooks (/home/fiqssphh/shunyata/shunyata/node_modules/sequelize/lib/instance-validator.js:60:7)
+    at async InstanceValidator.validate (/home/fiqssphh/shunyata/shunyata/node_modules/sequelize/lib/instance-validator.js:54:12)
+    at async model.save (/home/fiqssphh/shunyata/shunyata/node_modules/sequelize/lib/model.js:2426:7)
+    at async User.create (/home/fiqssphh/shunyata/shunyata/node_modules/sequelize/lib/model.js:1362:12)
+    at async Strategy._verify (/home/fiqssphh/shunyata/shunyata/app/config/passport.js:70:18)
+Exception ignored in: <_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>
+BrokenPipeError: [Errno 32] Broken pipe
+Exception ignored in: <_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>
+BrokenPipeError: [Errno 32] Broken pipe
