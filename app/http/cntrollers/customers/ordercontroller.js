@@ -74,7 +74,7 @@ async function sendBookingConfirmationEmail(to, name, booking) {
 
                             <p style="margin-top:25px;">Warm regards,<br>
                             <strong>Shunyata Eco Resort Team</strong><br>
-                            <a href="https://shunyataecoresort.com" style="color:#0b3d2e;">www.shunyataecoresort.com</a></p>
+                            <a href="https://shunyataecoresort.onrender.com" style="color:#0b3d2e;">www.shunyataecoresort.onrender.com</a></p>
                         </div>
 
                         <div style="background:#f1f1f1; text-align:center; padding:10px; font-size:12px; color:#666;">
