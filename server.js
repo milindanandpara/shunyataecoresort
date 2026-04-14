@@ -16,7 +16,7 @@ app.use(flash());
 const DB_USER = "fiqssphh_root";
 const DB_PASSWORD = "rewari@123";
 const DB_NAME = "fiqssphh_shunyata";
-const DB_HOST = "localhost";   // Agar same server DB use ho rahi hai
+const DB_HOST = process.env.DB_HOST;   // Agar same server DB use ho rahi hai
 
 // ====== Sequelize Connection ======
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
