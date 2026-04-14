@@ -150,7 +150,7 @@ async function sendVerificationEmail(email, token) {
 
         });
 
-        const verificationLink=`https://shunyataecoresort.com/verify/${token}`;
+        const verificationLink=`https://shunyataecoresort.onrender.com/verify/${token}`;
         console.log("🔗 Verification link:", verificationLink);
 
     // 🟢 Har mail ko unique banane ke liye headers aur footer
