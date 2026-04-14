@@ -53,7 +53,7 @@ function forgotcontroller() {
                 await user.save();
 
                 // Send reset email
-                const resetLink = ` https://shunyataecoresort.com/reset-password/${resetToken}`;
+                const resetLink = ` https://shunyataecoresort.onrender.com/reset-password/${resetToken}`;
                 const mailOptions = {
 
                     from:  `<forgot-password@shanamitechnologies.in>`,
