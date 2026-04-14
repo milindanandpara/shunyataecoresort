@@ -13,10 +13,14 @@ const flash = require('express-flash');
 app.use(flash());
 
 // ====== Direct MySQL Credentials (No dotenv) ======
-const DB_USER = "fiqssphh_root";
-const DB_PASSWORD = "rewari@123";
-const DB_NAME = "fiqssphh_shunyata";
-const DB_HOST = process.env.DB_HOST;   // Agar same server DB use ho rahi hai
+// const DB_USER = "fiqssphh_root";
+// const DB_PASSWORD = "rewari@123";
+// const DB_NAME = "fiqssphh_shunyata";
+// const DB_HOST = process.env.DB_HOST;   // Agar same server DB use ho rahi hai
+const DB_USER = process.env.DB_USER;
+const DB_PASSWORD = process.env.DB_PASSWORD;
+const DB_NAME = process.env.DB_NAME;
+const DB_HOST = process.env.DB_HOST;
 
 // ====== Sequelize Connection ======
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
@@ -31,6 +35,14 @@ sequelize.authenticate()
     .catch(err => console.error('❌MySQL Connection Error:', err));
 
 // ====== Session Store (MySQL) ======
+// const sessionStore = new MySQLStore({
+//     host: DB_HOST,
+//     port: 3306,
+//     user: DB_USER,
+//     password: DB_PASSWORD,
+//     database: DB_NAME,
+// });
+
 const sessionStore = new MySQLStore({
     host: DB_HOST,
     port: 3306,
